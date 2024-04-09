@@ -9,25 +9,27 @@ import {
 import { SIDEBAR_DATA, SidebarType } from "../sidebar/sidebar_data";
 import SidebarMenu from "../sidebar/sidebar_menu";
 import { useState } from "react";
+import { APPBAR_HEIGHT } from "./layout";
 
 export default function EmailNav() {
   const [selected, setSelected] = useState<string>("");
   return (
     <Box
       sx={{
-        minHeight: "100%",
-        overflow: "hidden auto",
+        height: `calc(100vh - ${APPBAR_HEIGHT}px - 24px)`,
+        overflow: "hidden",
         flexGrow: 1,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        alignItems: 'space-between'
+        alignItems: 'space-between',
+        
       }}
     >
       <List
         sx={{
           "--ListItem-radius": "8px",
-          "--List-gap": "4px",
+          "--List-gap": "2px",
           "--List-nestedInsetStart": "20px",
         }}
       >
@@ -40,12 +42,13 @@ export default function EmailNav() {
           />
         ))}
       </List>
+      <Box sx={{flexGrow: 1 }} />
       <List
         sx={{
-          mt: "auto",
-          flexGrow: 0,
           "--ListItem-radius": "8px",
-          "--List-gap": "6px",
+          "--List-gap": "2px",
+          justifyContent: 'end',
+          height: 'auto'
         }}
       >
         <ListItem>

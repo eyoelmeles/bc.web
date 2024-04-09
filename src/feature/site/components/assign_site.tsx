@@ -107,7 +107,7 @@ const AssignSiteForm = (props: AssignSiteDialogProps) => {
       //     usersId: right?.map(user => user.id.toString()),
       //   },
       // });
-      await axios.post("http://192.168.1.2:5259/site/assignuser", {
+      await axios.post("http://localhost:5259/site/assignuser", {
         siteId: props.siteId.toString(),
         usersId: right?.map((user) => user.id.toString()),
       });

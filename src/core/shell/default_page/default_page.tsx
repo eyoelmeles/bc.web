@@ -32,7 +32,7 @@ const DefaultPage = (props: PropsWithChildren<DefaultPageProps>) => {
       })}
       variant="outlined"
       style={{
-        height: `calc(100vh - ${APPBAR_HEIGHT} - 50) !important,`
+        height: '100%'
       }}
     >
       <Box

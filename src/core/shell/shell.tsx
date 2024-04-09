@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Layout from "./layout/layout";
+import Layout, { APPBAR_HEIGHT } from "./layout/layout";
 import Navigation from "./layout/navigation";
 import ColorSchemeToggle from "./sidebar/color_scheme_toggle";
 import {
@@ -72,12 +72,12 @@ function Shell() {
         </Layout.SideDrawer>
       )}
       <Layout.Root
-        sx={{
-          ...(drawerOpen && {
-            height: "100vh",
-            overflow: "hidden",
-          }),
-        }}
+        // sx={{
+        //   ...(drawerOpen && {
+        //     height: "100vh",
+        //     overflow: "hidden",
+        //   }),
+        // }}
       >
         <Layout.Header>
           <Box
@@ -163,7 +163,7 @@ function Shell() {
           <Navigation />
         </Layout.SideNav>
         <Layout.Main>
-          <Box display="flex" flex={1} width="100%">
+          <Box display="flex" flex={1} height={`calc(100vh - ${APPBAR_HEIGHT}px - 32px)`} width="100%" overflow="hidden auto">
             <Outlet />
           </Box>
         </Layout.Main>

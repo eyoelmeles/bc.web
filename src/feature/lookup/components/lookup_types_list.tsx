@@ -19,7 +19,7 @@ const LookupTypeList: React.FC<LookupTypeListProps> = (props) => {
   };
 
   return (
-    <Box sx={theme => ({ borderRight: .3, borderRightColor: theme.palette.neutral[300], height: '100%', width: "100%" })}>
+    <Box sx={theme => ({ borderRight: 1, borderRightColor: theme.palette.divider, height: '100%', width: "100%" })}>
       <Typography
         id="decorated-list-demo"
         level="body-xs"
@@ -33,7 +33,8 @@ const LookupTypeList: React.FC<LookupTypeListProps> = (props) => {
         sx={{
         }}
       >
-        {lookupTypes?.map((lookupType: any, index: number) => (<ListItem>
+        {lookupTypes?.map((lookupType: any, index: number) => (
+        <ListItem>
           <ListItemButton selected={props.selectedLookup == index} onClick={() => handleLookupType(index)}>
             <ListItemDecorator>
               <Apps />

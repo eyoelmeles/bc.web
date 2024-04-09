@@ -49,8 +49,11 @@ export default function LoginFinal() {
                   `${BASE_URL}/auth/login`,
                   {
                     userName: formData.get("userName"),
-                    siteName: formData.get("site"),
+                    // siteName: formData.get("site"),
                     password: formData.get("password"),
+                  },
+                  {
+                    withCredentials: false,
                   }
                 );
                 setData(response.data);
@@ -79,16 +82,7 @@ export default function LoginFinal() {
                 placeholder="johndoe@email.com"
               />
             </FormControl>
-            {!staff && (
-              <FormControl>
-                <FormLabel>Site</FormLabel>
-                <Input
-                  // html input attribute
-                  name="site"
-                  placeholder="Site"
-                />
-              </FormControl>
-            )}
+
             <FormControl>
               <FormLabel>Password</FormLabel>
               <Input

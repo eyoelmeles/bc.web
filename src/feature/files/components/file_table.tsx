@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useGetFileByFolderIdQuery } from "../api/files_endpoints";
 import { FileModel } from "../model/file";
 
@@ -53,7 +53,7 @@ const Row: React.FC<RowProps> = ({ row }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.fileDetails.map((fileDetail, index) => (
+                  {row?.fileDetails?.map((fileDetail, index) => (
                     <TableRow key={index}>
                       <TableCell>{fileDetail.details}</TableCell>
                       <TableCell>{fileDetail.fileType}</TableCell>
@@ -77,6 +77,10 @@ const FileTable = (props: FileTableProps) => {
       folderId: props.folderId,
     },
   });
+  useEffect(() => {
+    console.log(files);
+  }, [files]);
+
   return (
     <div>
       <Table>
