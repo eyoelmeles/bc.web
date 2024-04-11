@@ -1,12 +1,12 @@
-import { Add, ArrowForward, ArrowRight, Edit, Search } from "@mui/icons-material";
+import { Add, Search } from "@mui/icons-material";
 import AddSite from "../components/add_site";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetSitesQuery } from "../api/site_endpoints";
 import { SiteModel } from "../model/site";
-import { Box, Button, CircularProgress, Input } from "@mui/joy";
+import { Box, Button, CircularProgress, Input, Link } from "@mui/joy";
 import DefaultPage from "../../../core/shell/default_page/default_page";
-import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
+import GenericTable, { JoyTableColumn } from "../../../core/components/table";
 
 function SitePage() {
   const [addSite, setAddSite] = useState<boolean>(false);
@@ -18,62 +18,36 @@ function SitePage() {
   const { data: sites, isLoading } = useGetSitesQuery({
     params: {},
   });
-  const columns = useMemo<MRT_ColumnDef<SiteModel>[]>(
+
+  const col = useMemo<Array<JoyTableColumn<SiteModel>>>(
     () => [
       {
-        accessorKey: "name", //access nested data with dot notation
         header: "Site Name",
-        size: 150,
+        accessorKey: "name",
       },
       {
-        accessorKey: "owner",
         header: "Owner",
-        size: 150,
+        accessorKey: "owner",
       },
       {
         accessorKey: "client",
         header: "Client",
-        size: 150,
       },
       {
         accessorKey: "supervisor",
         header: "Supervisor",
-        size: 150,
       },
       {
-        accessorKey: "contractor",
-        header: "Contractor",
-        size: 150,
-      },
-      // {
-      //   accessorKey: "rate",
-      //   header: "Rate",
-      //   size: 150,
-      // },
-      // {
-      //   accessorKey: "quantity",
-      //   header: "Quantity",
-      //   size: 150,
-      // },
-      {
-        header: "",
-        id: "details",
+        header: "Detail",
+        accessorKey: "client",
         accessorFn(originalRow) {
-          return (
-            <Button
-              variant="plain"
-              endDecorator={<ArrowForward />}
-              onClick={() => navigate(`./${originalRow.id}`)}
-            >
-              Detail
-            </Button>
-          );
+          return <Link href="">{originalRow.client}</Link>;
         },
-        size: 150,
       },
     ],
     []
   );
+
   return (
     <DefaultPage
       title="Site"
@@ -99,19 +73,9 @@ function SitePage() {
           <CircularProgress sx={{ width: 12, height: 12 }} />
         </Box>
       ) : (
-        <MaterialReactTable
-          columns={columns}
-          data={sites ?? []}
-          getRowId={(originalRow) => originalRow.id}
-          muiTableBodyRowProps={({ row }) => ({
-            onDoubleClick: (_) => {
-              console.info(row.id);
-            },
-            sx: {
-              cursor: 'pointer',
-            },
-          })}
-        />
+        <>
+          <GenericTable<SiteModel> columns={col} data={sites ?? []} />
+        </>
       )}
       {addSite && <AddSite open={addSite} onClose={() => setAddSite(false)} />}
       {editSite && (

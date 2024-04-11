@@ -66,7 +66,7 @@ const FilesPage = () => {
             </IconButton>
           </Box>
           <List disablePadding sx={{ width: "100%", height: "100%" }}>
-            {folders?.map((folder) => (
+            {folders?.map((folder: any) => (
               <ListItem
                 key={folder.id}
                 sx={(theme) => ({
