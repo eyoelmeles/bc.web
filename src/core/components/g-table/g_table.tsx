@@ -271,7 +271,6 @@ function stableSort<T>(
 }
 
 export interface GTableColumns<T> {
-  id?: keyof T;
   name: string;
   key: keyof T;
   accessorFn?: (row: T) => ReactElement;
@@ -281,6 +280,7 @@ export interface GTableColumns<T> {
 interface GTableProps<T> {
   action?: boolean;
   selectable?: boolean;
+  id: keyof T;
   actionMenus?: Array<{
     name: string;
     handleClick: Dispatch<SetStateAction<boolean>>;
@@ -291,7 +291,7 @@ interface GTableProps<T> {
   columns: Array<GTableColumns<T>>;
 }
 
-export default function OrderTable<T>(props: GTableProps<T>) {
+export default function GTable<T>(props: GTableProps<T>) {
   const [order, setOrder] = useState<Order>("desc");
   const [selected, setSelected] = useState<readonly string[]>([]);
   const [open, setOpen] = useState(false);
@@ -459,16 +459,20 @@ export default function OrderTable<T>(props: GTableProps<T>) {
                   <Checkbox
                     size="sm"
                     indeterminate={
-                      selected.length > 0 && selected.length !== rows.length
+                      selected.length > 0 &&
+                      selected.length !== props.data.length
                     }
-                    checked={selected.length === rows.length}
+                    checked={selected.length === props.data.length}
                     onChange={(event) => {
                       setSelected(
-                        event.target.checked ? rows.map((row) => row.id) : []
+                        event.target.checked
+                          ? props.data.map((row) => row[props.id].toString())
+                          : []
                       );
                     }}
                     color={
-                      selected.length > 0 || selected.length === rows.length
+                      selected.length > 0 ||
+                      selected.length === props.data.length
                         ? "primary"
                         : undefined
                     }
@@ -513,17 +517,19 @@ export default function OrderTable<T>(props: GTableProps<T>) {
                   <td style={{ textAlign: "center", width: 120 }}>
                     <Checkbox
                       size="sm"
-                      checked={selected.includes(row?.id ?? index.toString())}
+                      checked={selected.includes(row[props.id].toString())}
                       color={
-                        selected.includes(row?.id ?? index.toString())
+                        selected.includes(row[props.id].toString())
                           ? "primary"
                           : undefined
                       }
                       onChange={(event) => {
                         setSelected((ids) =>
                           event.target.checked
-                            ? ids.concat(row.id)
-                            : ids.filter((itemId) => itemId !== row.id)
+                            ? ids.concat(row[props.id].toString())
+                            : ids.filter(
+                                (itemId) => itemId !== row[props.id].toString()
+                              )
                         );
                       }}
                       slotProps={{
@@ -536,7 +542,7 @@ export default function OrderTable<T>(props: GTableProps<T>) {
                 {props.columns.map((column, index) =>
                   column?.accessorFn ? (
                     <td
-                      key={`${index}-${column?.id ? row[column.id] : ""}`}
+                      key={`${index}-${row[props.id]}`}
                       //   style={{
                       //     display: "flex",
                       //     justifyContent: "start",
@@ -546,7 +552,7 @@ export default function OrderTable<T>(props: GTableProps<T>) {
                       {column.accessorFn(row)}
                     </td>
                   ) : (
-                    <td key={`${index}-${column?.id ? row[column.id] : ""}`}>
+                    <td key={`${index}-${row[props.id]}`}>
                       {row[column.key]?.toString()}
                     </td>
                   )

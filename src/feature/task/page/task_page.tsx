@@ -1,6 +1,6 @@
 import DefaultPage from "../../../core/shell/default_page/default_page";
 
-import OrderTable, {
+import GTable, {
   GTableColumns,
 } from "../../../core/components/g-table/g_table";
 import { useMemo } from "react";
@@ -92,7 +92,7 @@ const TaskScreen = () => {
   );
   return (
     <DefaultPage title="Tasks">
-      <OrderTable selectable columns={col} data={rowing} />
+      <GTable id="id" selectable columns={col} data={rowing} />
     </DefaultPage>
   );
 };
