@@ -16,7 +16,7 @@ const rowing: User[] = [
     profileImage: "profiile",
     roleId: "0",
     userName: "root",
-    email: "root@email.com",
+    email: "aroot@email.com",
   },
   {
     id: "2",
@@ -25,7 +25,7 @@ const rowing: User[] = [
     profileImage: "profiile",
     roleId: "0",
     userName: "root",
-    email: "root@email.com",
+    email: "broot@email.com",
   },
   {
     id: "3",
@@ -34,7 +34,7 @@ const rowing: User[] = [
     profileImage: "profiile",
     roleId: "0",
     userName: "root",
-    email: "root@email.com",
+    email: "croot@email.com",
   },
 ];
 
@@ -47,6 +47,7 @@ const TaskScreen = () => {
       {
         name: "Username",
         key: "userName",
+
         accessorFn: (row) => (
           <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
             <Avatar size="sm">{row.userName}</Avatar>
@@ -87,12 +88,22 @@ const TaskScreen = () => {
         name: "Emails",
         key: "email",
       },
+      {
+        name: "Phone",
+        key: "phoneNumber",
+      },
     ],
     []
   );
   return (
     <DefaultPage title="Tasks">
-      <GTable id="id" selectable columns={col} data={rowing} />
+      <GTable
+        id="id"
+        tableProps={{ stripe: "even" }}
+        columns={col}
+        data={rowing}
+        sortBy="email"
+      />
     </DefaultPage>
   );
 };

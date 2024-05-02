@@ -1,8 +1,5 @@
 import {
   ArrowDropDown,
-  AutorenewRounded,
-  Block,
-  CheckRounded,
   FilterAlt,
   KeyboardArrowLeft,
   KeyboardArrowRight,
@@ -35,6 +32,7 @@ import {
   ColorPaletteProp,
   Avatar,
   iconButtonClasses,
+  TableProps,
 } from "@mui/joy";
 import {
   CSSProperties,
@@ -43,189 +41,6 @@ import {
   SetStateAction,
   useState,
 } from "react";
-
-const rows = [
-  {
-    id: "INV-1234",
-    date: "Feb 3, 2023",
-    status: "Refunded",
-    customer: {
-      initial: "O",
-      name: "Olivia Ryhe",
-      email: "olivia@email.com",
-    },
-  },
-  {
-    id: "INV-1233",
-    date: "Feb 3, 2023",
-    status: "Paid",
-    customer: {
-      initial: "S",
-      name: "Steve Hampton",
-      email: "steve.hamp@email.com",
-    },
-  },
-  {
-    id: "INV-1232",
-    date: "Feb 3, 2023",
-    status: "Refunded",
-    customer: {
-      initial: "C",
-      name: "Ciaran Murray",
-      email: "ciaran.murray@email.com",
-    },
-  },
-  {
-    id: "INV-1231",
-    date: "Feb 3, 2023",
-    status: "Refunded",
-    customer: {
-      initial: "M",
-      name: "Maria Macdonald",
-      email: "maria.mc@email.com",
-    },
-  },
-  {
-    id: "INV-1230",
-    date: "Feb 3, 2023",
-    status: "Cancelled",
-    customer: {
-      initial: "C",
-      name: "Charles Fulton",
-      email: "fulton@email.com",
-    },
-  },
-  {
-    id: "INV-1229",
-    date: "Feb 3, 2023",
-    status: "Cancelled",
-    customer: {
-      initial: "J",
-      name: "Jay Hooper",
-      email: "hooper@email.com",
-    },
-  },
-  {
-    id: "INV-1228",
-    date: "Feb 3, 2023",
-    status: "Refunded",
-    customer: {
-      initial: "K",
-      name: "Krystal Stevens",
-      email: "k.stevens@email.com",
-    },
-  },
-  {
-    id: "INV-1227",
-    date: "Feb 3, 2023",
-    status: "Paid",
-    customer: {
-      initial: "S",
-      name: "Sachin Flynn",
-      email: "s.flyn@email.com",
-    },
-  },
-  {
-    id: "INV-1226",
-    date: "Feb 3, 2023",
-    status: "Cancelled",
-    customer: {
-      initial: "B",
-      name: "Bradley Rosales",
-      email: "brad123@email.com",
-    },
-  },
-  {
-    id: "INV-1225",
-    date: "Feb 3, 2023",
-    status: "Paid",
-    customer: {
-      initial: "O",
-      name: "Olivia Ryhe",
-      email: "olivia@email.com",
-    },
-  },
-  {
-    id: "INV-1224",
-    date: "Feb 3, 2023",
-    status: "Cancelled",
-    customer: {
-      initial: "S",
-      name: "Steve Hampton",
-      email: "steve.hamp@email.com",
-    },
-  },
-  {
-    id: "INV-1223",
-    date: "Feb 3, 2023",
-    status: "Paid",
-    customer: {
-      initial: "C",
-      name: "Ciaran Murray",
-      email: "ciaran.murray@email.com",
-    },
-  },
-  {
-    id: "INV-1221",
-    date: "Feb 3, 2023",
-    status: "Refunded",
-    customer: {
-      initial: "M",
-      name: "Maria Macdonald",
-      email: "maria.mc@email.com",
-    },
-  },
-  {
-    id: "INV-1220",
-    date: "Feb 3, 2023",
-    status: "Paid",
-    customer: {
-      initial: "C",
-      name: "Charles Fulton",
-      email: "fulton@email.com",
-    },
-  },
-  {
-    id: "INV-1219",
-    date: "Feb 3, 2023",
-    status: "Cancelled",
-    customer: {
-      initial: "J",
-      name: "Jay Hooper",
-      email: "hooper@email.com",
-    },
-  },
-  {
-    id: "INV-1218",
-    date: "Feb 3, 2023",
-    status: "Cancelled",
-    customer: {
-      initial: "K",
-      name: "Krystal Stevens",
-      email: "k.stevens@email.com",
-    },
-  },
-  {
-    id: "INV-1217",
-    date: "Feb 3, 2023",
-    status: "Paid",
-    customer: {
-      initial: "S",
-      name: "Sachin Flynn",
-      email: "s.flyn@email.com",
-    },
-  },
-  {
-    id: "INV-1216",
-    date: "Feb 3, 2023",
-    status: "Cancelled",
-    customer: {
-      initial: "B",
-      name: "Bradley Rosales",
-      email: "brad123@email.com",
-    },
-  },
-];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -239,13 +54,10 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 
 type Order = "asc" | "desc";
 
-function getComparator<Key extends keyof any>(
+function getComparator<T>(
   order: Order,
-  orderBy: Key
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string }
-) => number {
+  orderBy: keyof T
+): (a: T, b: T) => number {
   return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
@@ -255,20 +67,6 @@ function getComparator<Key extends keyof any>(
 // stableSort() brings sort stability to non-modern browsers (notably IE11). If you
 // only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
 // with exampleArray.slice().sort(exampleComparator)
-function stableSort<T>(
-  array: readonly T[],
-  comparator: (a: T, b: T) => number
-) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
 
 export interface GTableColumns<T> {
   name: string;
@@ -289,12 +87,28 @@ interface GTableProps<T> {
 
   data: Array<T>;
   columns: Array<GTableColumns<T>>;
+  tableProps?: TableProps;
+  sortBy?: keyof T;
 }
 
 export default function GTable<T>(props: GTableProps<T>) {
   const [order, setOrder] = useState<Order>("desc");
   const [selected, setSelected] = useState<readonly string[]>([]);
   const [open, setOpen] = useState(false);
+
+  //   function stableSort(array: readonly T[], comparator: (a: T, b: T) => number) {
+  //     const stabilizedThis = props?.sortBy
+  //       ? array.map((el, index) => [el, index] as [T, number])
+  //       : [];
+  //     stabilizedThis.sort((a, b) => {
+  //       const order = comparator(a[0][props?.sortBy], b[0][props?.sortBy]);
+  //       if (order !== 0) {
+  //         return order;
+  //       }
+  //       return a[1] - b[1];
+  //     });
+  //     return stabilizedThis.map((el) => el[0]);
+  //   }
 
   function RowMenu() {
     return props?.action ? (
@@ -445,8 +259,9 @@ export default function GTable<T>(props: GTableProps<T>) {
             "--TableCell-paddingY": "4px",
             "--TableCell-paddingX": "8px",
           }}
+          {...props.tableProps}
         >
-          <thead>
+          <thead style={{}}>
             <tr>
               {props?.selectable && (
                 <th
@@ -466,7 +281,7 @@ export default function GTable<T>(props: GTableProps<T>) {
                     onChange={(event) => {
                       setSelected(
                         event.target.checked
-                          ? props.data.map((row) => row[props.id].toString())
+                          ? props.data.map((row) => row[props.id] as string)
                           : []
                       );
                     }}
@@ -502,7 +317,37 @@ export default function GTable<T>(props: GTableProps<T>) {
               </th> */}
 
               {props.columns.map((column) => (
-                <th style={column?.style}>{column.name}</th>
+                <th
+                  style={{
+                    textAlign: "start",
+                    padding: "12px 6px",
+                    ...(column?.style ?? {}),
+                  }}
+                >
+                  {props?.sortBy === column.key ? (
+                    <Link
+                      underline="none"
+                      color="primary"
+                      component="button"
+                      onClick={() => setOrder(order === "asc" ? "desc" : "asc")}
+                      fontWeight="lg"
+                      endDecorator={<ArrowDropDown />}
+                      sx={{
+                        "& svg": {
+                          transition: "0.2s",
+                          transform:
+                            order === "desc"
+                              ? "rotate(0deg)"
+                              : "rotate(180deg)",
+                        },
+                      }}
+                    >
+                      {column.name}
+                    </Link>
+                  ) : (
+                    column.name
+                  )}
+                </th>
               ))}
 
               {/* <th style={{ width: 140, padding: "12px 6px" }}>Status</th>
@@ -511,54 +356,59 @@ export default function GTable<T>(props: GTableProps<T>) {
           </thead>
           <tbody>
             {/* {stableSort(rowing, getComparator(order, "id")).map((row, idx) => ( */}
-            {props.data.map((row, index) => (
-              <tr key={`${index}`}>
-                {props.selectable && (
-                  <td style={{ textAlign: "center", width: 120 }}>
-                    <Checkbox
-                      size="sm"
-                      checked={selected.includes(row[props.id].toString())}
-                      color={
-                        selected.includes(row[props.id].toString())
-                          ? "primary"
-                          : undefined
-                      }
-                      onChange={(event) => {
-                        setSelected((ids) =>
-                          event.target.checked
-                            ? ids.concat(row[props.id].toString())
-                            : ids.filter(
-                                (itemId) => itemId !== row[props.id].toString()
-                              )
-                        );
-                      }}
-                      slotProps={{
-                        checkbox: { sx: { textAlign: "left" } },
-                      }}
-                      sx={{ verticalAlign: "text-bottom" }}
-                    />
-                  </td>
-                )}
-                {props.columns.map((column, index) =>
-                  column?.accessorFn ? (
-                    <td
-                      key={`${index}-${row[props.id]}`}
-                      //   style={{
-                      //     display: "flex",
-                      //     justifyContent: "start",
-                      //     alignItems: "center",
-                      //   }}
-                    >
-                      {column.accessorFn(row)}
+            {/* {props.data.slice().sort(getComparator(order, props?.sortBy))(rowing, getComparator(order, "id")).map((row, idx) => ( */}
+            {props.data
+              .slice()
+              .sort(getComparator<T>(order, props?.sortBy ?? props.id))
+              .map((row, index) => (
+                <tr key={`${index}`}>
+                  {props.selectable && (
+                    <td style={{ textAlign: "center", width: 120 }}>
+                      <Checkbox
+                        size="sm"
+                        checked={selected.includes(row[props.id] as string)}
+                        color={
+                          selected.includes(row[props.id] as string)
+                            ? "primary"
+                            : undefined
+                        }
+                        onChange={(event) => {
+                          setSelected((ids) =>
+                            event.target.checked
+                              ? ids.concat(row[props.id] as string)
+                              : ids.filter(
+                                  (itemId) =>
+                                    itemId !== (row[props.id] as string)
+                                )
+                          );
+                        }}
+                        slotProps={{
+                          checkbox: { sx: { textAlign: "left" } },
+                        }}
+                        sx={{ verticalAlign: "text-bottom" }}
+                      />
                     </td>
-                  ) : (
-                    <td key={`${index}-${row[props.id]}`}>
-                      {row[column.key]?.toString()}
-                    </td>
-                  )
-                )}
-              </tr>
-            ))}
+                  )}
+                  {props.columns.map((column, index) =>
+                    column?.accessorFn ? (
+                      <td
+                        key={`${index}-${row[props.id]}`}
+                        //   style={{
+                        //     display: "flex",
+                        //     justifyContent: "start",
+                        //     alignItems: "center",
+                        //   }}
+                      >
+                        {column.accessorFn(row)}
+                      </td>
+                    ) : (
+                      <td key={`${index}-${row[props.id]}`}>
+                        {row[column.key]?.toString()}
+                      </td>
+                    )
+                  )}
+                </tr>
+              ))}
             {/* {props.data.map((row, idx) => (
               <tr key={row?.id ?? idx}>
                 {props.selectable && (
