@@ -47,6 +47,7 @@ const AppRoute = () => {
             <Route path="site-report" element={<SiteReportPage />} />
             <Route path="schedule" element={<SchedulePage />} />
             <Route path="rfi" element={<RFIPage />} />
+            <Route path="tata" element={<TaskScreen />} />
             <Route path="schedule/:id" element={<WorkItemPage />} />
             <Route path="inspection" element={<InspectionPage />} />
             <Route path="work-item" element={<WorkItemPage />} />
