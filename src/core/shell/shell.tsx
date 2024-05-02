@@ -13,12 +13,13 @@ import {
   Menu as JoyMenu,
   MenuButton,
   Stack,
+  ListDivider,
 } from "@mui/joy";
 import {
   SearchRounded,
-  GridViewRounded,
   Menu as MenuIcon,
   MailRounded,
+  Notifications,
 } from "@mui/icons-material";
 import { Outlet, useNavigate } from "react-router-dom";
 import { BASE_URL, api } from "../../store/app_api";
@@ -26,6 +27,9 @@ import { useGetSiteByUserQuery } from "../../feature/site/api/site_endpoints";
 import { SiteModel } from "../../feature/site/model/site";
 import { useDispatch, useSelector } from "react-redux";
 import { setSite } from "./state/site_action";
+import ProfileMenuList from "./component/profile_menu";
+import { User } from "../../feature/user/model/user";
+import NotificationBar from "./component/notification";
 
 function Shell() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -35,35 +39,39 @@ function Shell() {
   useEffect(() => {
     console.log(user.user.profileImage);
   }, []);
+
   const navigate = useNavigate();
+
   const handleLogout = () => {
     localStorage.removeItem("userData");
     navigate("/login");
   };
+
   const { data: sites } = useGetSiteByUserQuery({
     params: {
       userId: user.user.id,
     },
   });
+
   const dispatch = useDispatch();
 
   const handleSiteChange = (site: SiteModel) => {
     dispatch(setSite(site));
     dispatch(api.util.resetApiState());
-    setSelectedSite(site)
-  }
+    setSelectedSite(site);
+  };
   const site = useSelector((state: any) => state.site);
   useEffect(() => {
     if (sites && sites.length > 0) {
       dispatch(setSite(sites?.[0]));
       setSelectedSite(site);
     }
-  }, [site])
+  }, [site]);
   useEffect(() => {
     if (sites && sites.length > 0 && !selectedSite) {
       dispatch(setSite(sites?.[0]));
     }
-  })
+  });
   return (
     <Box>
       {drawerOpen && (
@@ -72,12 +80,12 @@ function Shell() {
         </Layout.SideDrawer>
       )}
       <Layout.Root
-        // sx={{
-        //   ...(drawerOpen && {
-        //     height: "100vh",
-        //     overflow: "hidden",
-        //   }),
-        // }}
+      // sx={{
+      //   ...(drawerOpen && {
+      //     height: "100vh",
+      //     overflow: "hidden",
+      //   }),
+      // }}
       >
         <Layout.Header>
           <Box
@@ -94,20 +102,22 @@ function Shell() {
               onClick={() => setDrawerOpen(true)}
               sx={{ display: { sm: "none" } }}
             >
-              <MenuIcon />
+              <MenuIcon fontSize="small" />
             </IconButton>
             <IconButton
               size="sm"
               variant="soft"
-              sx={{ display: { xs: "none", sm: "inline-flex" } }}
+              sx={{
+                display: { xs: "none", sm: "inline-flex" },
+              }}
             >
-              <MailRounded />
+              <MailRounded fontSize="small" />
             </IconButton>
             <Stack>
               <Typography component="h1" fontWeight="xl">
                 BUILD CONNECT
               </Typography>
-              <Typography level="body-xs">{site?.name}</Typography>
+              <Typography level="body-xs">{site?.name ?? ""}</Typography>
             </Stack>
             {/* <BuildConnectLogo /> */}
           </Box>
@@ -132,38 +142,31 @@ function Shell() {
               boxShadow: "sm",
             }}
           />
-          <Box sx={{ display: "flex", flexDirection: "row", gap: 1.5 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-evenly",
+            }}
+          >
             <ColorSchemeToggle />
-            <Dropdown>
-              <MenuButton variant="soft" color="neutral" aria-label="Apps" size="sm">
-                <GridViewRounded />
-              </MenuButton>
-
-              <JoyMenu>
-                {sites?.map((site, index) => (
-                  <MenuItem selected={selectedSite?.id == site.id} key={`${site.name}-${index}`} onClick={() => handleSiteChange(site)}>{site.name}</MenuItem>
-                ))}
-              </JoyMenu>
-            </Dropdown>
-            <Dropdown>
-              <MenuButton variant="plain" size="sm">
-                <Avatar src={`${BASE_URL}${user.user.profileImage}`} />
-              </MenuButton>
-              <JoyMenu>
-                <MenuItem>Profile</MenuItem>
-                <MenuItem>My account</MenuItem>
-                <MenuItem onClick={handleLogout} color="danger">
-                  Logout
-                </MenuItem>
-              </JoyMenu>
-            </Dropdown>
+            <NotificationBar siteId={sites?.[0]?.id ?? ""} />
+            <ProfileMenuList
+              user={user.user as User}
+              handleLogout={handleLogout}
+            />
           </Box>
         </Layout.Header>
         <Layout.SideNav>
           <Navigation />
         </Layout.SideNav>
         <Layout.Main>
-          <Box display="flex" flex={1} height={`calc(100vh - ${APPBAR_HEIGHT}px - 32px)`} width="100%" overflow="hidden auto">
+          <Box
+            display="flex"
+            flex={1}
+            height={`calc(100vh - ${APPBAR_HEIGHT}px - 32px)`}
+            width="auto"
+            overflow="hidden auto"
+          >
             <Outlet />
           </Box>
         </Layout.Main>

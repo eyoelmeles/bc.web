@@ -11,7 +11,7 @@ export const siteEndpoints = api.injectEndpoints({
       }),
       providesTags: ["site"],
     }),
-    getSiteById: builder.query<any, any>({
+    getSiteById: builder.query<SiteModel, any>({
       query: (data) => ({
         url: "/site",
         method: "get",
@@ -33,7 +33,7 @@ export const siteEndpoints = api.injectEndpoints({
         method: "post",
         data: data?.body,
         headers: {
-          'Content-Type': 'multipart/form-data'
+          "Content-Type": "multipart/form-data",
         },
         params: data?.params,
       }),
@@ -66,7 +66,6 @@ export const siteEndpoints = api.injectEndpoints({
       }),
       invalidatesTags: (result) => (result ? ["site"] : []),
     }),
-    // ... add more user-related endpoints here
   }),
 });
 

@@ -11,7 +11,7 @@ export const userEndpoints = api.injectEndpoints({
       }),
       providesTags: ["user"],
     }),
-    getAllUsers: builder.query<any, any>({
+    getAllUsers: builder.query<User[], any>({
       query: (data) => ({
         url: "/user/all",
         method: "get",
@@ -21,7 +21,7 @@ export const userEndpoints = api.injectEndpoints({
     }),
     getAllRoles: builder.query<string[], any>({
       query: (data) => ({
-        url: "/role/all",
+        url: "/user/roles",
         method: "get",
         params: data?.params,
       }),

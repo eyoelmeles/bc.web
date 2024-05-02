@@ -1,31 +1,26 @@
 import { DarkMode, LightMode } from "@mui/icons-material";
 import { IconButton } from "@mui/joy";
 import { useColorScheme as useJoyColorScheme } from "@mui/joy/styles";
-import { useColorScheme as useMaterialColorScheme } from "@mui/material/styles";
-import { useEffect, useState } from "react";
 
 const ModeToggle = () => {
-  const { mode, setMode: setMaterialMode } = useMaterialColorScheme();
-  const { setMode: setJoyMode } = useJoyColorScheme();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  if (!mounted) {
-    // prevent server-side rendering mismatch
-    // because `mode` is undefined on the server.
-    return null;
-  }
+  const { mode, setMode: setJoyMode } = useJoyColorScheme();
+
+  const handleModeChange = () => {
+    setJoyMode(mode === "dark" ? "light" : "dark");
+  };
+
   return (
     <IconButton
       variant="soft"
-      onClick={() => {
-        setMaterialMode(mode === "dark" ? "light" : "dark");
-        setJoyMode(mode === "dark" ? "light" : "dark");
-      }}
+      size="sm"
+      onClick={handleModeChange}
+      sx={{ flexShrink: 0 }}
     >
-      {/** You can use `mode` from Joy UI or Material UI since they are synced **/}
-      {mode === "dark" ? <DarkMode /> : <LightMode />}
+      {mode === "dark" ? (
+        <LightMode fontSize="small" />
+      ) : (
+        <DarkMode fontSize="small" />
+      )}
     </IconButton>
   );
 };

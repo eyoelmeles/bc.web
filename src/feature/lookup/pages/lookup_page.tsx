@@ -1,6 +1,5 @@
-import { Toolbar } from "@mui/material";
 import DefaultPage from "../../../core/shell/default_page/default_page";
-import { Box, Button, Divider, Grid, Stack, Typography } from "@mui/joy";
+import { Box, Button, Divider, Typography } from "@mui/joy";
 import LookupTable from "../components/lookup_table";
 import { useEffect, useState } from "react";
 import AddLookup from "../components/add_lookup";
@@ -28,20 +27,47 @@ export const LookupPage = () => {
   }, [data]);
 
   return (
-    <DefaultPage title="Lookups">
+    <DefaultPage
+      title="Lookups"
+      // primaryButton={
+      //   selectedLookupType ? (
+      //     <Button
+      //       startDecorator={<Add />}
+      //       variant="outlined"
+      //       size="md"
+      //       onClick={handleCreateLookup}
+      //     >
+      //       Add {selectedLookupType} Lookup
+      //     </Button>
+      //   ) : (
+      //     <></>
+      //   )
+      // }
+    >
       <Box display="flex" height="100%">
         <Box width="20%" height="100%">
-
           <LookupTypeList
             setLookupType={setSelectedLookupType}
             selectedLookup={selectedLookupType}
           />
-
         </Box>
         <Box padding={1} width="100%">
-          <Box display="flex" justifyContent="space-between" padding={2} alignItems="start">
-            <Typography level="h4" color="neutral">{selectedLookupType}</Typography>
-            <Button variant="outlined" startDecorator={<Add />} onClick={handleCreateLookup}>Add Lookup</Button>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            padding={2}
+            alignItems="start"
+          >
+            <Typography level="h4" color="neutral">
+              {selectedLookupType}
+            </Typography>
+            <Button
+              variant="outlined"
+              startDecorator={<Add />}
+              onClick={handleCreateLookup}
+            >
+              Add Lookup
+            </Button>
           </Box>
           <Divider />
           <LookupTable selectedLookupType={selectedLookupType} />

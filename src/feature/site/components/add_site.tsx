@@ -23,28 +23,29 @@ const AddSite = (props: AddSiteDialogProps) => {
 
   const [createSite] = useCreateSiteMutation();
   const [updateSite] = useUpdateSiteMutation();
+
   const handleAddSite = async (data: any) => {
     try {
+      const formData = new FormData();
+      formData.append("Name", data.name);
+      formData.append("Owner", data.owner);
+      formData.append("client", data.client);
+      formData.append("supervisor", data.supervisor);
+      formData.append("contractor", data.contractor);
+      // formData.append("prValue", data.prValue);
+      formData.append("longitude", sitePosition[0].toString());
+      formData.append("latitude", sitePosition[1].toString());
+      if (file) formData.append("logo", file);
       if (props.site) {
         await updateSite({
           body: {
             id: props.site.id,
-
+            ...formData,
           },
         });
       } else {
-        const formData = new FormData();
-
-        formData.append('Name', data.name);
-        formData.append('Owner', data.owner);
-        formData.append('client', data.client);
-        formData.append('supervisor', data.supervisor);
-        formData.append('contractor', data.contractor);
-        formData.append('longitude', sitePosition[0].toString());
-        formData.append('latitude', sitePosition[1].toString());
-        if (file) formData.append('logo', file);
         await createSite({
-          body: formData
+          body: formData,
         });
       }
       props.onClose();
@@ -53,19 +54,16 @@ const AddSite = (props: AddSiteDialogProps) => {
     }
   };
 
-
   useEffect(() => {
     console.log(sitePosition);
   });
-
 
   return (
     <DefaultDialog
       open={props.open}
       onClose={props.onClose}
       title={`${props.site ? "Edit Site" : "Create new Site"}`}
-      description={``
-      }
+      description={``}
     >
       <form
         onSubmit={(event) => {
@@ -79,24 +77,9 @@ const AddSite = (props: AddSiteDialogProps) => {
         <Stack spacing={2} direction="row">
           <Stack spacing={2} display="flex" flex={1}>
             <Typography level="body-lg">Site Information</Typography>
-            <Input
-              fullWidth
-              size="sm"
-              placeholder="Site Name"
-              name="name"
-            />
-            <Input
-              fullWidth
-              size="sm"
-              placeholder="Owner"
-              name="owner"
-            />
-            <Input
-              fullWidth
-              size="sm"
-              placeholder="Client"
-              name="client"
-            />
+            <Input fullWidth size="sm" placeholder="Site Name" name="name" />
+            <Input fullWidth size="sm" placeholder="Owner" name="owner" />
+            <Input fullWidth size="sm" placeholder="Client" name="client" />
             <Input
               fullWidth
               size="sm"
@@ -109,6 +92,39 @@ const AddSite = (props: AddSiteDialogProps) => {
               placeholder="Contractor"
               name="contractor"
             />
+
+            <Input
+              fullWidth
+              size="sm"
+              placeholder="Project Value in BIRR"
+              name="prValue"
+              type="number"
+            />
+            {/* <Input
+        placeholder="Amount"
+        startDecorator={{ dollar: '$', baht: '฿', yen: '¥' }[currency]}
+        endDecorator={
+          <React.Fragment>
+            <Divider orientation="vertical" />
+            <Select
+              variant="plain"
+              value={currency}
+              onChange={(_, value) => setCurrency(value!)}
+              slotProps={{
+                listbox: {
+                  variant: 'outlined',
+                },
+              }}
+              sx={{ mr: -1.5, '&:hover': { bgcolor: 'transparent' } }}
+            >
+              <Option value="dollar">US dollar</Option>
+              <Option value="baht">Thai baht</Option>
+              <Option value="yen">Japanese yen</Option>
+            </Select>
+          </React.Fragment>
+        }
+        sx={{ width: 300 }}
+      /> */}
 
             <Box paddingY={2}>
               <Typography>Logo</Typography>
@@ -124,7 +140,9 @@ const AddSite = (props: AddSiteDialogProps) => {
             </Box>
           </Stack>
         </Stack>
-        <Button fullWidth type="submit">Submit</Button>
+        <Button fullWidth type="submit">
+          Submit
+        </Button>
       </form>
     </DefaultDialog>
   );

@@ -8,6 +8,7 @@ import {
   GestureOutlined,
   HomeMaxOutlined,
   Person2Outlined,
+  PersonAddAlt,
   ReceiptLong,
   SettingsOutlined,
   SettingsSuggest,
@@ -26,7 +27,11 @@ export const SIDEBAR_DATA = [
         icon: <EditAttributesOutlined />,
         path: "/site",
       },
-
+      {
+        name: "Manage Site Members",
+        icon: <PersonAddAlt />,
+        path: "/manage-site",
+      },
     ],
   },
   {

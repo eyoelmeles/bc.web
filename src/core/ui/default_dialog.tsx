@@ -24,6 +24,7 @@ const DefaultDialog: React.FC<React.PropsWithChildren<DefaultDialogProps>> = (
         aria-describedby="generic-modal-dialog-description"
       >
         <ModalClose />
+
         <Typography id="generic-modal-dialog-title" level="h2">
           {props.title}
         </Typography>

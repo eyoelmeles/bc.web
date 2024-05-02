@@ -64,7 +64,7 @@ function SideNav(props: BoxProps) {
           p: 2,
           minWidth: {
             sm: 0,
-            md: 150
+            md: 150,
           },
           bgcolor: "background.surface",
           borderRight: "1px solid",
@@ -80,7 +80,6 @@ function SideNav(props: BoxProps) {
     />
   );
 }
-
 
 function SidePane(props: BoxProps) {
   return (
@@ -111,7 +110,14 @@ function Main(props: BoxProps) {
       {...props}
       sx={[
         {
-          p: 2,
+          p: {
+            xs: 1,
+            md: 2,
+          },
+          width: {
+            xs: "100vw",
+            sm: "auto",
+          },
           bgcolor: "background.surface",
         },
         ...(Array.isArray(props.sx) ? props.sx : [props.sx]),

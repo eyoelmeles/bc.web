@@ -7,6 +7,7 @@ export interface JoyTableColumn<T> {
 }
 
 interface GenericTableProps<T> extends TableProps {
+  unique: keyof T;
   data: T[];
   columns: JoyTableColumn<T>[];
   caption?: string;
@@ -16,10 +17,12 @@ export default function GenericTable<T>(Props: GenericTableProps<T>) {
   return (
     <Table
       size={Props.size}
-      stripe="3n"
+      stripe="even"
       hoverRow
       borderAxis="xBetween"
       sx={{ captionSide: "bottom" }}
+      variant="outlined"
+      {...Props}
     >
       <caption>{Props.caption}</caption>
       <thead>
@@ -35,6 +38,7 @@ export default function GenericTable<T>(Props: GenericTableProps<T>) {
             {Props.columns.map((column, index) =>
               column.accessorFn ? (
                 <td
+                  key={`${index}-${row[Props.unique]}`}
                   style={{
                     display: "flex",
                     justifyContent: "start",
@@ -44,7 +48,9 @@ export default function GenericTable<T>(Props: GenericTableProps<T>) {
                   {column.accessorFn(row)}
                 </td>
               ) : (
-                <td key={`${index}`}>{row[column.accessorKey]?.toString()}</td>
+                <td key={`${index}-${row[Props.unique]}`}>
+                  {row[column.accessorKey]?.toString()}
+                </td>
               )
             )}
           </tr>
