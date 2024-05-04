@@ -3,7 +3,6 @@ import Shell from "../core/shell/shell";
 import SitePage from "../feature/site/page/site_page";
 import SiteDetail from "../feature/site/page/site_detail";
 import UsersPage from "../feature/user/page/users_page";
-
 import UserDetail from "../feature/user/page/user_detail";
 import LoginPage from "../core/auth/page/login";
 import { LookupPage } from "../feature/lookup/pages/lookup_page";
@@ -17,13 +16,10 @@ import InspectionPage from "../feature/inspection/page/inspection_page";
 import SiteActivity from "../feature/site_activity/page/site_activity";
 import SiteReportPage from "../feature/site_report/page/site_report_page";
 import RFIPage from "../feature/rfi/page/rfi_page";
-import { SiteArchievePage } from "../feature/site/page/site_archieve";
-import SitesList from "../feature/site/page/sites_list";
 import EmptySitePage from "../feature/site/page/empty_site";
 import CreateSitePage from "../feature/site/page/create_site_page";
-import CreateSitePendingPage from "../feature/site/page/create_site_pending";
 import CreatedSiteStatus from "../feature/site/page/create_site_pending";
-import ManageSiteTeam from "../feature/site/page/manage_site_team";
+import SiteMemberPage from "../feature/user/page/site_member";
 
 const AppRoute = () => {
   const token = localStorage.getItem("userData");
@@ -39,7 +35,7 @@ const AppRoute = () => {
             <Route path="emptysite" element={<EmptySitePage />} />
 
             <Route path="site" element={<SitePage />} />
-            <Route path="manage-site" element={<ManageSiteTeam />} />
+            <Route path="site/members" element={<SiteMemberPage />} />
             <Route path="/site/:id" element={<SiteDetail />} />
             <Route path="users" element={<UsersPage />} />
             <Route path="users/:id" element={<UserDetail />} />

@@ -15,10 +15,6 @@ import {
   IconButton,
   Button,
   Box,
-  FormControl,
-  FormLabel,
-  Select,
-  Option,
   Modal,
   ModalDialog,
   ModalClose,
@@ -28,9 +24,6 @@ import {
   Table,
   Checkbox,
   Link,
-  Chip,
-  ColorPaletteProp,
-  Avatar,
   iconButtonClasses,
   TableProps,
 } from "@mui/joy";
@@ -76,7 +69,6 @@ export interface GTableColumns<T> {
 }
 
 interface GTableProps<T> {
-  action?: boolean;
   selectable?: boolean;
   id: keyof T;
   actionMenus?: Array<{
@@ -111,7 +103,7 @@ export default function GTable<T>(props: GTableProps<T>) {
   //   }
 
   function RowMenu() {
-    return props?.action ? (
+    return props?.actionMenus ? (
       <Dropdown>
         <MenuButton
           slots={{ root: IconButton }}
@@ -350,8 +342,10 @@ export default function GTable<T>(props: GTableProps<T>) {
                 </th>
               ))}
 
-              {/* <th style={{ width: 140, padding: "12px 6px" }}>Status</th>
-              <th style={{ width: 140, padding: "12px 6px" }}> </th> */}
+              {/* <th style={{ width: 140, padding: "12px 6px" }}>Status</th> */}
+              {props?.actionMenus !== undefined && (
+                <th style={{ width: 140, padding: "12px 6px" }}> </th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -407,6 +401,18 @@ export default function GTable<T>(props: GTableProps<T>) {
                       </td>
                     )
                   )}
+                  {props?.actionMenus !== undefined && (
+                    <td>
+                      <Box
+                        sx={{ display: "flex", gap: 2, alignItems: "center" }}
+                      >
+                        <Link level="body-xs" component="button">
+                          Download
+                        </Link>
+                        <RowMenu />
+                      </Box>
+                    </td>
+                  )}
                 </tr>
               ))}
             {/* {props.data.map((row, idx) => (
@@ -434,14 +440,7 @@ export default function GTable<T>(props: GTableProps<T>) {
                   </td>
                 )}
 
-                <td>
-                  <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                    <Link level="body-xs" component="button">
-                      Download
-                    </Link>
-                    <RowMenu />
-                  </Box>
-                </td>
+                
               </tr>
             ))} */}
           </tbody>

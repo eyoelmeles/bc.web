@@ -5,12 +5,8 @@ import {
   Engineering,
   FolderZip,
   Foundation,
-  GestureOutlined,
-  HomeMaxOutlined,
-  Person2Outlined,
   PersonAddAlt,
   ReceiptLong,
-  SettingsOutlined,
   SettingsSuggest,
   SquareFoot,
   Update,
@@ -19,18 +15,18 @@ import {
 
 export const SIDEBAR_DATA = [
   {
-    name: "Sites",
+    name: "Site",
     icon: <Foundation />,
     children: [
       {
-        name: "Site",
+        name: "Sites",
         icon: <EditAttributesOutlined />,
         path: "/site",
       },
       {
-        name: "Manage Site Members",
+        name: "Members",
         icon: <PersonAddAlt />,
-        path: "/manage-site",
+        path: "site/members",
       },
     ],
   },
