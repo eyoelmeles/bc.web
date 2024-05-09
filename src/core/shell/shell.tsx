@@ -33,12 +33,7 @@ import NotificationBar from "./component/notification";
 
 function Shell() {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedSite, setSelectedSite] = useState<SiteModel | undefined>();
   const user = JSON.parse(localStorage.getItem("userData") ?? "");
-
-  useEffect(() => {
-    console.log(user.user.profileImage);
-  }, []);
 
   const navigate = useNavigate();
 
@@ -58,20 +53,14 @@ function Shell() {
   const handleSiteChange = (site: SiteModel) => {
     dispatch(setSite(site));
     dispatch(api.util.resetApiState());
-    setSelectedSite(site);
   };
   const site = useSelector((state: any) => state.site);
   useEffect(() => {
     if (sites && sites.length > 0) {
       dispatch(setSite(sites?.[0]));
-      setSelectedSite(site);
     }
-  }, [site]);
-  useEffect(() => {
-    if (sites && sites.length > 0 && !selectedSite) {
-      dispatch(setSite(sites?.[0]));
-    }
-  });
+  }, [sites]);
+
   return (
     <Box>
       {drawerOpen && (

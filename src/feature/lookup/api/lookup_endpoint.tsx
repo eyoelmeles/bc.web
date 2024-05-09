@@ -60,6 +60,7 @@ export const lookupsEndpoints = api.injectEndpoints({
 export const {
   useGetLookupsQuery,
   useGetLookupsByLookupTypeQuery,
+  useLazyGetLookupsByLookupTypeQuery,
   useGetLookupTypesQuery,
   useCreateLookupMutation,
   useUpdateLookupMutation,

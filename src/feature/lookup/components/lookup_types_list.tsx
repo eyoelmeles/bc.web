@@ -1,12 +1,23 @@
-import { SetStateAction } from "react";
+import { SetStateAction, useEffect } from "react";
 import { useGetLookupTypesQuery } from "../api/lookup_endpoint";
-import { Box, List, ListItem, ListItemButton, ListItemDecorator, Typography } from "@mui/joy";
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemDecorator,
+  Skeleton,
+  Typography,
+} from "@mui/joy";
 import { LookupType } from "../model/lookup";
 import { Apps } from "@mui/icons-material";
+import { capitalCase } from "change-case";
 
 interface LookupTypeListProps {
-  selectedLookup: LookupType;
-  setLookupType: React.Dispatch<SetStateAction<number>>;
+  selectedLookup: { name: string; index: number } | null;
+  setLookupType: React.Dispatch<
+    SetStateAction<{ name: string; index: number } | null>
+  >;
 }
 
 const LookupTypeList: React.FC<LookupTypeListProps> = (props) => {
@@ -14,12 +25,24 @@ const LookupTypeList: React.FC<LookupTypeListProps> = (props) => {
     params: {},
   });
 
-  const handleLookupType = (lookupType: number) => {
-    props.setLookupType(lookupType);
+  const handleLookupType = (name: string, index: number) => {
+    props.setLookupType({ name, index });
   };
 
+  useEffect(() => {
+    if (lookupTypes?.length > 0)
+      props.setLookupType({ name: lookupTypes[0], index: 0 });
+  }, [lookupTypes]);
+
   return (
-    <Box sx={theme => ({ borderRight: 1, borderRightColor: theme.palette.divider, height: '100%', width: "100%" })}>
+    <Box
+      sx={(theme) => ({
+        borderRight: 1,
+        borderRightColor: theme.palette.divider,
+        height: "100%",
+        width: "100%",
+      })}
+    >
       <Typography
         id="decorated-list-demo"
         level="body-xs"
@@ -29,19 +52,23 @@ const LookupTypeList: React.FC<LookupTypeListProps> = (props) => {
       >
         Lookup Types
       </Typography>
-      <List
-        sx={{
-        }}
-      >
-        {lookupTypes?.map((lookupType: any, index: number) => (
-        <ListItem>
-          <ListItemButton selected={props.selectedLookup == index} onClick={() => handleLookupType(index)}>
-            <ListItemDecorator>
-              <Apps />
-            </ListItemDecorator>
-            {lookupType}
-          </ListItemButton>
-        </ListItem>
+      <List size="sm" sx={{ width: "100%" }}>
+        {lookupTypes?.map((lookupType: string, index: number) => (
+          <ListItem key={`${index}-${lookupType}`}>
+            <ListItemButton
+              selected={props.selectedLookup?.index == index}
+              onClick={() => handleLookupType(lookupType, index)}
+            >
+              <ListItemDecorator>
+                <Apps />
+              </ListItemDecorator>
+              <Typography>
+                <Skeleton loading={!props?.selectedLookup}>
+                  {capitalCase(lookupType)}
+                </Skeleton>
+              </Typography>
+            </ListItemButton>
+          </ListItem>
         ))}
       </List>
     </Box>

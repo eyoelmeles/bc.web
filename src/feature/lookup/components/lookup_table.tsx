@@ -1,9 +1,11 @@
-import MaterialReactTable, { MRT_ColumnDef } from "material-react-table";
-import { useGetLookupsByLookupTypeQuery } from "../api/lookup_endpoint";
-import { useMemo } from "react";
+import { useLazyGetLookupsByLookupTypeQuery } from "../api/lookup_endpoint";
+import { useEffect, useMemo } from "react";
 import { Lookup } from "../model/lookup";
-import { Box, Button, Typography } from "@mui/joy";
+import { Box } from "@mui/joy";
 import { useSelector } from "react-redux";
+import GTable, {
+  GTableColumns,
+} from "../../../core/components/g-table/g_table";
 
 interface LookupTableProps {
   selectedLookupType: number;
@@ -11,32 +13,42 @@ interface LookupTableProps {
 
 export default function LookupTable(props: LookupTableProps) {
   const site = useSelector((state: any) => state.site);
-  const { data: lookups } = useGetLookupsByLookupTypeQuery({
-    params: {
-      lookupType: props.selectedLookupType,
-      siteId: site.id,
-    },
-  });
-  const columns = useMemo<MRT_ColumnDef<Lookup>[]>(
+
+  const [refetchLookup, { data: lookups }] =
+    useLazyGetLookupsByLookupTypeQuery();
+
+  useEffect(() => {
+    if (site) {
+      refetchLookup(
+        {
+          params: {
+            lookupType: props.selectedLookupType,
+            siteId: site.id,
+          },
+        },
+        true
+      );
+    }
+  }, [site, props.selectedLookupType]);
+
+  const columns = useMemo<GTableColumns<Lookup>[]>(
     () => [
       {
-        accessorKey: "name", //access nested data with dot notation
-        header: "Name",
-        size: 150,
+        key: "name", //access nested data with dot notation
+        name: "Name",
       },
       {
-        accessorKey: "description",
-        header: "Description",
-        size: 150,
+        key: "description",
+        name: "Description",
       },
     ],
     []
   );
 
-  const handleDelete = () => { };
+  const handleDelete = () => {};
   return (
     <Box width="100%">
-      <MaterialReactTable columns={columns} data={lookups ?? []} />
+      <GTable id="id" columns={columns} data={lookups ?? []} />
     </Box>
   );
 }

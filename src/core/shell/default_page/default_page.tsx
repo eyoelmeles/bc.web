@@ -54,14 +54,16 @@ const DefaultPage = (props: PropsWithChildren<DefaultPageProps>) => {
           alignItems="center"
           flex={1}
           width="100%"
-          sx={{ m: 0, p: 0 }}
         >
           <Stack direction="row" spacing={1}>
-            {!props.goBack ?? (
-              <Link variant="plain" onClick={handleBack}>
-                Back
-              </Link>
-            )}
+            <Link
+              variant="plain"
+              onClick={handleBack}
+              sx={!props.goBack ? { display: "none" } : {}}
+            >
+              Back
+            </Link>
+
             <Typography
               alignSelf="center"
               level="h4"

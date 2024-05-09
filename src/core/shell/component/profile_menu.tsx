@@ -25,8 +25,8 @@ const ProfileMenuList: React.FC<ProfileMenuList> = (props) => {
 `}
         />
       </MenuButton>
-      <Menu sx={{ padding: 0 }}>
-        <MenuItem sx={{ padding: 2 }}>
+      <Menu size="sm" sx={{ padding: 0, zIndex: 6000 }}>
+        <MenuItem sx={{ padding: 1 }}>
           <Box display="flex" gap={2}>
             <Avatar
               src={`http://localhost:5259/api/files/${props.user.profileImage}

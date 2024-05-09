@@ -5,6 +5,8 @@ import {
   ListItemButton,
   ListItemContent,
   ListItemDecorator,
+  Skeleton,
+  Typography,
 } from "@mui/joy";
 import { SIDEBAR_DATA, SidebarType } from "../sidebar/sidebar_data";
 import SidebarMenu from "../sidebar/sidebar_menu";
@@ -12,6 +14,7 @@ import { useState } from "react";
 import { APPBAR_HEIGHT } from "./layout";
 import { useGetSiteByUserQuery } from "../../../feature/site/api/site_endpoints";
 import useUserData from "../../auth/hooks/useUserData";
+import { WifiOffOutlined } from "@mui/icons-material";
 
 export default function EmailNav() {
   const [userData, _] = useUserData();
@@ -19,6 +22,14 @@ export default function EmailNav() {
   const { data, isLoading } = useGetSiteByUserQuery({
     params: { userId: userData?.user.id },
   });
+
+  const ConnectivityIndicator = () => (
+    <Box style={{ gap: 4, display: "flex" }}>
+      <WifiOffOutlined />
+      <Typography level="body-xs">No Connection</Typography>
+    </Box>
+  );
+
   return (
     <Box
       sx={{
@@ -38,8 +49,17 @@ export default function EmailNav() {
           "--List-nestedInsetStart": "20px",
         }}
       >
-        {data !== undefined &&
-          data?.length > 0 &&
+        {isLoading && (
+          <Box>
+            <Typography>
+              <Skeleton loading={isLoading}>
+                Lorem ipsum is placeholder text commonly used in the graphic,
+                print, and publishing industries.
+              </Skeleton>
+            </Typography>
+          </Box>
+        )}
+        {data !== undefined && data?.length > 0 ? (
           SIDEBAR_DATA.map((sidebar: SidebarType, index) => (
             <SidebarMenu
               key={`${index}-${sidebar.name}`}
@@ -47,7 +67,10 @@ export default function EmailNav() {
               selected={selected}
               setSelected={setSelected}
             />
-          ))}
+          ))
+        ) : (
+          <ConnectivityIndicator />
+        )}
       </List>
       <Box sx={{ flexGrow: 1 }} />
       <List
