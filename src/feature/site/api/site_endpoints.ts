@@ -73,6 +73,7 @@ export const {
   useGetSitesQuery,
   useGetSiteByIdQuery,
   useGetSiteByUserQuery,
+  useLazyGetSiteByUserQuery,
   useCreateSiteMutation,
   useUpdateSiteMutation,
   useDeleteSiteMutation,

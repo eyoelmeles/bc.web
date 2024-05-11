@@ -5,6 +5,7 @@ import { Add } from "@mui/icons-material";
 import SiteRoles from "../components/site_roles";
 import InviteMemberForm from "../components/invite_member_form";
 import MemberTable from "../components/members_table";
+import { capitalCase } from "change-case";
 
 export interface RoleProperty {
   name: string;
@@ -51,14 +52,15 @@ const ManageSiteTeam = () => {
             minHeight={60}
           >
             <Typography level="h4" color="neutral">
-              {role?.name}
+              {capitalCase(role?.name ?? "")}
             </Typography>
             <Button
               variant="outlined"
               startDecorator={<Add />}
               onClick={handleToggleForm}
+              disabled={!role}
             >
-              Invite Member as {role?.name}
+              Invite Member as {capitalCase(role?.name ?? "")}
             </Button>
           </Box>
           <Divider />

@@ -2,34 +2,21 @@ import { useEffect, useState } from "react";
 import Layout, { APPBAR_HEIGHT } from "./layout/layout";
 import Navigation from "./layout/navigation";
 import ColorSchemeToggle from "./sidebar/color_scheme_toggle";
-import {
-  IconButton,
-  Input,
-  Typography,
-  Box,
-  Avatar,
-  Dropdown,
-  MenuItem,
-  Menu as JoyMenu,
-  MenuButton,
-  Stack,
-  ListDivider,
-} from "@mui/joy";
+import { IconButton, Input, Typography, Box, Stack } from "@mui/joy";
 import {
   SearchRounded,
   Menu as MenuIcon,
   MailRounded,
-  Notifications,
 } from "@mui/icons-material";
 import { Outlet, useNavigate } from "react-router-dom";
-import { BASE_URL, api } from "../../store/app_api";
+// import { api } from "../../store/app_api";
 import { useGetSiteByUserQuery } from "../../feature/site/api/site_endpoints";
-import { SiteModel } from "../../feature/site/model/site";
+// import { SiteModel } from "../../feature/site/model/site";
 import { useDispatch, useSelector } from "react-redux";
-import { setSite } from "./state/site_action";
 import ProfileMenuList from "./component/profile_menu";
 import { User } from "../../feature/user/model/user";
 import NotificationBar from "./component/notification";
+import { setActiveSites, setSite } from "./state/site_reducer";
 
 function Shell() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -50,16 +37,21 @@ function Shell() {
 
   const dispatch = useDispatch();
 
-  const handleSiteChange = (site: SiteModel) => {
-    dispatch(setSite(site));
-    dispatch(api.util.resetApiState());
-  };
+  // const handleSiteChange = (site: SiteModel) => {
+  //   dispatch(setSite(site));
+  //   dispatch(api.util.resetApiState());
+  // };
+
   const site = useSelector((state: any) => state.site);
+
   useEffect(() => {
+    console.log(site);
     if (sites && sites.length > 0) {
+      // TODO: based on last modified date, or some property choose the most critical site as default
+      dispatch(setActiveSites(sites));
       dispatch(setSite(sites?.[0]));
     }
-  }, [sites]);
+  }, [sites, site]);
 
   return (
     <Box>
@@ -106,7 +98,7 @@ function Shell() {
               <Typography component="h1" fontWeight="xl">
                 BUILD CONNECT
               </Typography>
-              <Typography level="body-xs">{site?.name ?? ""}</Typography>
+              <Typography level="body-xs">{site?.site?.name ?? ""}</Typography>
             </Stack>
             {/* <BuildConnectLogo /> */}
           </Box>

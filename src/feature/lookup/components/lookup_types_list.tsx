@@ -2,6 +2,7 @@ import { SetStateAction, useEffect } from "react";
 import { useGetLookupTypesQuery } from "../api/lookup_endpoint";
 import {
   Box,
+  Divider,
   List,
   ListItem,
   ListItemButton,
@@ -9,7 +10,6 @@ import {
   Skeleton,
   Typography,
 } from "@mui/joy";
-import { LookupType } from "../model/lookup";
 import { Apps } from "@mui/icons-material";
 import { capitalCase } from "change-case";
 
@@ -21,7 +21,7 @@ interface LookupTypeListProps {
 }
 
 const LookupTypeList: React.FC<LookupTypeListProps> = (props) => {
-  const { data: lookupTypes } = useGetLookupTypesQuery({
+  const { data: lookupTypes, isLoading } = useGetLookupTypesQuery({
     params: {},
   });
 
@@ -43,15 +43,18 @@ const LookupTypeList: React.FC<LookupTypeListProps> = (props) => {
         width: "100%",
       })}
     >
-      <Typography
-        id="decorated-list-demo"
-        level="body-xs"
-        textTransform="uppercase"
-        fontWeight="lg"
-        sx={{ p: 2 }}
-      >
-        Lookup Types
-      </Typography>
+      <Box minHeight={60} sx={{ p: 2 }} display="flex">
+        <Typography
+          id="decorated-list-demo"
+          level="body-xs"
+          textTransform="uppercase"
+          fontWeight="lg"
+          alignSelf="flex-end"
+        >
+          Lookup Types
+        </Typography>
+      </Box>
+      <Divider />
       <List size="sm" sx={{ width: "100%" }}>
         {lookupTypes?.map((lookupType: string, index: number) => (
           <ListItem key={`${index}-${lookupType}`}>
@@ -70,6 +73,30 @@ const LookupTypeList: React.FC<LookupTypeListProps> = (props) => {
             </ListItemButton>
           </ListItem>
         ))}
+        {isLoading && (
+          <List size="sm" sx={{ width: "100%" }}>
+            <ListItem>
+              <Typography>
+                <Skeleton></Skeleton>
+              </Typography>
+            </ListItem>
+            <ListItem>
+              <Typography>
+                <Skeleton></Skeleton>
+              </Typography>
+            </ListItem>
+            <ListItem>
+              <Typography>
+                <Skeleton></Skeleton>
+              </Typography>
+            </ListItem>
+            <ListItem>
+              <Typography>
+                <Skeleton></Skeleton>
+              </Typography>
+            </ListItem>
+          </List>
+        )}
       </List>
     </Box>
   );

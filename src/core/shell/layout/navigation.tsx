@@ -5,30 +5,28 @@ import {
   ListItemButton,
   ListItemContent,
   ListItemDecorator,
-  Skeleton,
-  Typography,
 } from "@mui/joy";
-import { SIDEBAR_DATA, SidebarType } from "../sidebar/sidebar_data";
-import SidebarMenu from "../sidebar/sidebar_menu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { APPBAR_HEIGHT } from "./layout";
-import { useGetSiteByUserQuery } from "../../../feature/site/api/site_endpoints";
+import { useLazyGetSiteByUserQuery } from "../../../feature/site/api/site_endpoints";
 import useUserData from "../../auth/hooks/useUserData";
-import { WifiOffOutlined } from "@mui/icons-material";
+import { RenderMenus } from "../component/render_menus";
 
 export default function EmailNav() {
   const [userData, _] = useUserData();
   const [selected, setSelected] = useState<string>("");
-  const { data, isLoading } = useGetSiteByUserQuery({
-    params: { userId: userData?.user.id },
-  });
+  const [fetchSites, { data, isLoading }] = useLazyGetSiteByUserQuery({});
 
-  const ConnectivityIndicator = () => (
-    <Box style={{ gap: 4, display: "flex" }}>
-      <WifiOffOutlined />
-      <Typography level="body-xs">No Connection</Typography>
-    </Box>
-  );
+  useEffect(() => {
+    if (userData?.user?.id) {
+      fetchSites(
+        {
+          params: { userId: userData?.user.id },
+        },
+        true
+      );
+    }
+  }, [userData]);
 
   return (
     <Box
@@ -49,28 +47,12 @@ export default function EmailNav() {
           "--List-nestedInsetStart": "20px",
         }}
       >
-        {isLoading && (
-          <Box>
-            <Typography>
-              <Skeleton loading={isLoading}>
-                Lorem ipsum is placeholder text commonly used in the graphic,
-                print, and publishing industries.
-              </Skeleton>
-            </Typography>
-          </Box>
-        )}
-        {data !== undefined && data?.length > 0 ? (
-          SIDEBAR_DATA.map((sidebar: SidebarType, index) => (
-            <SidebarMenu
-              key={`${index}-${sidebar.name}`}
-              menu={sidebar}
-              selected={selected}
-              setSelected={setSelected}
-            />
-          ))
-        ) : (
-          <ConnectivityIndicator />
-        )}
+        <RenderMenus
+          isLoading={isLoading}
+          data={data}
+          selected={selected}
+          setSelected={setSelected}
+        />
       </List>
       <Box sx={{ flexGrow: 1 }} />
       <List

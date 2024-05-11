@@ -8,14 +8,14 @@ import {
 import DefaultDialog from "../../../core/ui/default_dialog";
 import { useSelector } from "react-redux";
 
-interface AddLookupProps {
-  lookup?: Lookup;
+interface LookupFormProps {
+  lookup: Lookup | null;
   lookupType: number;
   open: boolean;
   onClose: () => void;
 }
 
-const AddLookup = (props: AddLookupProps) => {
+const LookupForm = (props: LookupFormProps) => {
   const site = useSelector((state: any) => state.site);
   const [createLookup] = useCreateLookupMutation();
   const [updateLookup] = useUpdateLookupMutation();
@@ -27,7 +27,7 @@ const AddLookup = (props: AddLookupProps) => {
             id: props.lookup?.id,
             name: data.name,
             description: data.description,
-            siteId: site?.id
+            siteId: site.site?.id,
           },
         });
       } else {
@@ -36,7 +36,7 @@ const AddLookup = (props: AddLookupProps) => {
             name: data.name,
             description: data.description,
             lookupType: props.lookupType,
-            siteId: site?.id
+            siteId: site?.site?.id,
           },
         });
       }
@@ -50,12 +50,12 @@ const AddLookup = (props: AddLookupProps) => {
     <DefaultDialog
       open={props.open}
       onClose={props.onClose}
-      title="Create New Lookup"
-      description={
+      title={props?.lookup ? "Update Lookup" : "Create New Lookup"}
+      description={`${
         Object.keys(LookupType).filter((x) => isNaN(Number(x)))[
-        props.lookupType
+          props.lookupType
         ]
-      }
+      }, update endpoint is not done yet`}
     >
       <form
         onSubmit={(event) => {
@@ -67,11 +67,16 @@ const AddLookup = (props: AddLookupProps) => {
       >
         <Stack spacing={2}>
           <Stack spacing={2}>
-            <Input placeholder="Name" name="name" />
+            <Input
+              placeholder="Name"
+              name="name"
+              defaultValue={props?.lookup ? props?.lookup?.name : ""}
+            />
             <Textarea
               minRows={2}
               placeholder="Description"
               name="description"
+              defaultValue={props?.lookup ? props?.lookup?.description : ""}
             />
             <Button type="submit">Submit</Button>
           </Stack>
@@ -81,4 +86,4 @@ const AddLookup = (props: AddLookupProps) => {
   );
 };
 
-export default AddLookup;
+export default LookupForm;

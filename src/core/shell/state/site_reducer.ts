@@ -1,15 +1,28 @@
+import { createSlice } from "@reduxjs/toolkit";
 import { SiteModel } from "../../../feature/site/model/site";
-import { SET_SITE } from "./site_action";
 
-const initialState: SiteModel | null = null;
-
-const siteReducer = (state = initialState, action: any) => {
-    switch (action.type) {
-        case SET_SITE:
-            return action.payload;
-        default:
-            return state;
-    }
+interface InitialState {
+  site: null | SiteModel;
+  activeSites: SiteModel[];
 }
 
-export default siteReducer;
+const initialState: InitialState = {
+  site: null,
+  activeSites: [],
+};
+
+const siteSlice = createSlice({
+  name: "site",
+  initialState,
+  reducers: {
+    setActiveSites(state, action) {
+      state.activeSites = action.payload;
+    },
+    setSite(state, action) {
+      state.site = action.payload;
+    },
+  },
+});
+
+export const { setActiveSites, setSite } = siteSlice.actions;
+export default siteSlice.reducer;

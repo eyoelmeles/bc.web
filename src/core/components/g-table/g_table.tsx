@@ -26,6 +26,9 @@ import {
   Link,
   iconButtonClasses,
   TableProps,
+  FormControl,
+  FormLabel,
+  Stack,
 } from "@mui/joy";
 import {
   CSSProperties,
@@ -34,8 +37,6 @@ import {
   SetStateAction,
   useState,
   useMemo,
-  memo,
-  createElement,
 } from "react";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -84,6 +85,11 @@ interface GTableProps<T> {
   columns: Array<GTableColumns<T>>;
   tableProps?: TableProps;
   sortBy?: keyof T;
+  searchable?: boolean;
+  pagination?: {
+    at: number;
+    by: number;
+  };
 }
 
 function GTable<T>(props: GTableProps<T>) {
@@ -173,7 +179,7 @@ function GTable<T>(props: GTableProps<T>) {
   //     </>
   //   );
   return (
-    <>
+    <Stack spacing={1} direction={"column"}>
       <Sheet
         className="SearchAndFilters-mobile"
         sx={{
@@ -186,7 +192,7 @@ function GTable<T>(props: GTableProps<T>) {
           size="sm"
           placeholder="Search"
           startDecorator={<Search />}
-          sx={{ flexGrow: 1 }}
+          sx={{ maxWidth: 100 }}
         />
         <IconButton
           size="sm"
@@ -212,25 +218,27 @@ function GTable<T>(props: GTableProps<T>) {
           </ModalDialog>
         </Modal>
       </Sheet>
-      <Box
-        className="SearchAndFilters-tabletUp"
-        sx={{
-          borderRadius: "sm",
-          py: 2,
-          display: { xs: "none", sm: "flex" },
-          flexWrap: "wrap",
-          gap: 1.5,
-          "& > *": {
-            minWidth: { xs: "120px", md: "160px" },
-          },
-        }}
-      >
-        {/* <FormControl sx={{ flex: 1 }} size="sm">
-          <FormLabel>Search for order</FormLabel>
-          <Input size="sm" placeholder="Search" startDecorator={<Search />} />
-        </FormControl> */}
-        {/* {renderFilters()} */}
-      </Box>
+      {props?.searchable && (
+        <Box
+          className="SearchAndFilters-tabletUp"
+          sx={{
+            borderRadius: "sm",
+            py: 1,
+            display: { xs: "none", sm: "flex" },
+            flexWrap: "wrap",
+            gap: 1,
+            "& > *": {
+              minWidth: { xs: "120px", md: "160px" },
+            },
+          }}
+        >
+          <FormControl sx={{ flex: 1, maxWidth: 200 }} size="sm">
+            <FormLabel>Search for order</FormLabel>
+            <Input size="sm" placeholder="Search" startDecorator={<Search />} />
+          </FormControl>
+          {/* {renderFilters()} */}
+        </Box>
+      )}
       <Sheet
         className="OrderTableContainer"
         variant="outlined"
@@ -318,7 +326,7 @@ function GTable<T>(props: GTableProps<T>) {
                   key={`${index}-${column.name}`}
                   style={{
                     textAlign: "start",
-                    padding: "12px 6px",
+                    // padding: "12px 6px",
                     ...(column?.style ?? {}),
                   }}
                 >
@@ -399,11 +407,15 @@ function GTable<T>(props: GTableProps<T>) {
                           //     justifyContent: "start",
                           //     alignItems: "center",
                           //   }}
+                          style={{ ...column?.style }}
                         >
                           {column.accessorFn(row)}
                         </td>
                       ) : (
-                        <td key={`${index}-${row[props.id]}`}>
+                        <td
+                          key={`${index}-${row[props.id]}`}
+                          style={{ ...column?.style }}
+                        >
                           {row[column.key]?.toString()}
                         </td>
                       )
@@ -453,50 +465,52 @@ function GTable<T>(props: GTableProps<T>) {
           </tbody>
         </Table>
       </Sheet>
-      <Box
-        className="Pagination-laptopUp"
-        sx={{
-          pt: 2,
-          gap: 1,
-          [`& .${iconButtonClasses.root}`]: { borderRadius: "50%" },
-          display: {
-            xs: "none",
-            md: "flex",
-          },
-        }}
-      >
-        <Button
-          size="sm"
-          variant="outlined"
-          color="neutral"
-          startDecorator={<KeyboardArrowLeft />}
+      {props?.pagination && (
+        <Box
+          className="Pagination-laptopUp"
+          sx={{
+            pt: 2,
+            gap: 1,
+            [`& .${iconButtonClasses.root}`]: { borderRadius: "50%" },
+            display: {
+              xs: "none",
+              md: "flex",
+            },
+          }}
         >
-          Previous
-        </Button>
-
-        <Box sx={{ flex: 1 }} />
-        {["1", "2", "3", "…", "8", "9", "10"].map((page) => (
-          <IconButton
-            key={page}
+          <Button
             size="sm"
-            variant={Number(page) ? "outlined" : "plain"}
+            variant="outlined"
             color="neutral"
+            startDecorator={<KeyboardArrowLeft />}
           >
-            {page}
-          </IconButton>
-        ))}
-        <Box sx={{ flex: 1 }} />
+            Previous
+          </Button>
 
-        <Button
-          size="sm"
-          variant="outlined"
-          color="neutral"
-          endDecorator={<KeyboardArrowRight />}
-        >
-          Next
-        </Button>
-      </Box>
-    </>
+          <Box sx={{ flex: 1 }} />
+          {["1", "2", "3", "…", "8", "9", "10"].map((page) => (
+            <IconButton
+              key={page}
+              size="sm"
+              variant={Number(page) ? "outlined" : "plain"}
+              color="neutral"
+            >
+              {page}
+            </IconButton>
+          ))}
+          <Box sx={{ flex: 1 }} />
+
+          <Button
+            size="sm"
+            variant="outlined"
+            color="neutral"
+            endDecorator={<KeyboardArrowRight />}
+          >
+            Next
+          </Button>
+        </Box>
+      )}
+    </Stack>
   );
 }
 

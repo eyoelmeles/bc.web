@@ -11,6 +11,7 @@ import {
 import React, { SetStateAction } from "react";
 import { useGetAllRolesQuery } from "../../user/api/user.api";
 import { RoleProperty } from "../page/manage_site_team";
+import { capitalCase } from "change-case";
 
 interface SiteRolesProps {
   role: string | null;
@@ -57,7 +58,7 @@ const SiteRoles: React.FC<SiteRolesProps> = (props) => {
               <ListItemDecorator>
                 <Apps />
               </ListItemDecorator>
-              {role}
+              {capitalCase(role)}
             </ListItemButton>
           </ListItem>
         ))}
