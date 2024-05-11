@@ -1,4 +1,7 @@
-import { useLazyGetLookupsByLookupTypeQuery } from "../api/lookup_endpoint";
+import {
+  useDeleteLookupMutation,
+  useLazyGetLookupsByLookupTypeQuery,
+} from "../api/lookup_endpoint";
 import { useEffect, useMemo, useState } from "react";
 import { Lookup } from "../model/lookup";
 import { Box, Link, Stack } from "@mui/joy";
@@ -33,6 +36,18 @@ export default function LookupTable(props: LookupTableProps) {
       );
     }
   }, [site, props.selectedLookupType]);
+
+  const [deleteLookup] = useDeleteLookupMutation();
+
+  const handleDeleteLookup = async () => {
+    if (selectedLookup) {
+      await deleteLookup({
+        params: {
+          id: selectedLookup?.id,
+        },
+      });
+    }
+  };
 
   const columns = useMemo<GTableColumns<Lookup>[]>(
     () => [
@@ -78,7 +93,7 @@ export default function LookupTable(props: LookupTableProps) {
         setOpen={() => setSelectedLookup(null)}
         title="Delete Lookup"
         warningText="are you sure"
-        onDelete={() => {}}
+        onDelete={handleDeleteLookup}
       />
     </Box>
   );

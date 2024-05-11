@@ -56,7 +56,10 @@ const DeleteModal: FC<DeleteModalProps> = (props) => {
           <Button
             variant="solid"
             color="danger"
-            onClick={() => props.setOpen(false)}
+            onClick={async () => {
+              await props.onDelete();
+              props.setOpen(false);
+            }}
           >
             Delete
           </Button>
